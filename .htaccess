@@ -1,0 +1,47 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set the base URL for the website
+RewriteBase /
+
+# Rewrite URLs for the public-facing website
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+
+# Rewrite URLs for the admin panel
+RewriteRule ^admin/index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/ /admin/index.php [L]
+
+# Set the error documents
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+
+# Set the MIME types for certain file types
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+AddType application/javascript .js
+AddType text/css .css
+
+# Set the caching headers for certain file types
+<FilesMatch "\.(jpg|jpeg|png|gif|bmp)$">
+  Header set Cache-Control "max-age=31536000"
+</FilesMatch>
+<FilesMatch "\.(css|js)$">
+  Header set Cache-Control "max-age=604800"
+</FilesMatch>
+
+# Set the security headers
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options "nosniff"
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# Set the PHP settings
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value memory_limit 128M
+php_value max_execution_time 300
